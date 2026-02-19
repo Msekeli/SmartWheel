@@ -3,14 +3,16 @@ namespace SmartWheel.Domain.Entities;
 public sealed class Riddle
 {
     public Guid Id { get; private set; }
-    public string Question { get; private set; }
-    public string OptionA { get; private set; }
-    public string OptionB { get; private set; }
-    public string OptionC { get; private set; }
-    public string OptionD { get; private set; }
-    public string CorrectOption { get; private set; }
 
-    private Riddle() { } // For persistence
+    public string Question { get; private set; } = null!;
+    public string OptionA { get; private set; } = null!;
+    public string OptionB { get; private set; } = null!;
+    public string OptionC { get; private set; } = null!;
+    public string OptionD { get; private set; } = null!;
+    public string CorrectOption { get; private set; } = null!;
+
+    // Required by ORM / deserialization
+    private Riddle() { }
 
     public Riddle(
         Guid id,
@@ -22,11 +24,11 @@ public sealed class Riddle
         string correctOption)
     {
         Id = id;
-        Question = question;
-        OptionA = optionA;
-        OptionB = optionB;
-        OptionC = optionC;
-        OptionD = optionD;
+        Question = Validate(question, nameof(question));
+        OptionA = Validate(optionA, nameof(optionA));
+        OptionB = Validate(optionB, nameof(optionB));
+        OptionC = Validate(optionC, nameof(optionC));
+        OptionD = Validate(optionD, nameof(optionD));
 
         SetCorrectOption(correctOption);
     }
@@ -44,11 +46,21 @@ public sealed class Riddle
 
     private void SetCorrectOption(string correctOption)
     {
-        var normalized = correctOption.Trim().ToUpperInvariant();
+        var normalized = Validate(correctOption, nameof(correctOption))
+            .Trim()
+            .ToUpperInvariant();
 
         if (normalized is not ("A" or "B" or "C" or "D"))
             throw new ArgumentException("Correct option must be A, B, C, or D.");
 
         CorrectOption = normalized;
+    }
+
+    private static string Validate(string value, string name)
+    {
+        if (string.IsNullOrWhiteSpace(value))
+            throw new ArgumentException($"{name} cannot be empty.");
+
+        return value;
     }
 }

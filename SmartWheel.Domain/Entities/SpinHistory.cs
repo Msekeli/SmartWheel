@@ -7,10 +7,20 @@ public sealed class SpinHistory
     public int PrizeAmount { get; private set; }
     public DateTime CreatedUtc { get; private set; }
 
-    private SpinHistory() { } // For persistence
+    // Required for ORM / deserialization
+    private SpinHistory() { }
 
     private SpinHistory(Guid id, Guid userId, int prizeAmount, DateTime createdUtc)
     {
+        if (userId == Guid.Empty)
+            throw new ArgumentException("UserId cannot be empty.");
+
+        if (prizeAmount < 0)
+            throw new ArgumentException("Prize amount cannot be negative.");
+
+        if (createdUtc == default)
+            throw new ArgumentException("CreatedUtc must be a valid date.");
+
         Id = id;
         UserId = userId;
         PrizeAmount = prizeAmount;
