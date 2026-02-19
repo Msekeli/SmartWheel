@@ -1,6 +1,9 @@
+using SmartWheel.Domain.Entities;
+
 namespace SmartWheel.Application.Interfaces;
 
 public interface IUserRepository
 {
-    Task<string> GetHelloAsync();
+    Task<User?> GetByIdAsync(Guid userId);
+    Task UpdateAsync(User user);
 }
