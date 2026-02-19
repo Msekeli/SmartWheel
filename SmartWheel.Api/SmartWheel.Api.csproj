@@ -17,4 +17,9 @@
     <PackageReference Include="Microsoft.Azure.Functions.Worker.Sdk" Version="2.0.7" />
   </ItemGroup>
 
+  <ItemGroup>
+    <ProjectReference Include="..\SmartWheel.Application\SmartWheel.Application.csproj" />
+    <ProjectReference Include="..\SmartWheel.Infrastructure\SmartWheel.Infrastructure.csproj" />
+  </ItemGroup>
+
 </Project>
